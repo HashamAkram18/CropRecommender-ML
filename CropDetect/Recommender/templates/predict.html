@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block title %} Predict - Crop Recommender {% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Left Column: Prediction Form -->
+        <div class="col-lg-8 mb-4">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-4">
+                        <i class="fa-solid fa-flask fa-2x me-3" style="color: var(--primary-green);"></i>
+                        <div>
+                            <h3 class="fw-bold mb-0">Crop Recommendation</h3>
+                            <small class="text-muted"><i class="fa-solid fa-circle-info me-1"></i>Enter numeric values
+                                (Humidity 0-100, pH 0-14)</small>
+                        </div>
+                    </div>
+
+                    <form method="POST" id="predictForm">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <!-- N, P, K Row -->
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold text-uppercase small text-muted">N</label>
+                                <input type="number" step="any" name="nitrogen" class="form-control bg-light border-0"
+                                    placeholder="e.g., 90" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold text-uppercase small text-muted">P</label>
+                                <input type="number" step="any" name="phosphorus" class="form-control bg-light border-0"
+                                    placeholder="e.g., 90" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold text-uppercase small text-muted">K</label>
+                                <input type="number" step="any" name="potassium" class="form-control bg-light border-0"
+                                    placeholder="e.g., 90" required>
+                            </div>
+
+                            <!-- Temp, Humidity, PH Row -->
+                            <div class="col-md-4">
+                                <label
+                                    class="form-label fw-semibold text-uppercase small text-muted">Temperature</label>
+                                <input type="number" step="any" name="temperature"
+                                    class="form-control bg-light border-0" placeholder="e.g., 90" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold text-uppercase small text-muted">Humidity</label>
+                                <input type="number" step="any" name="humidity" class="form-control bg-light border-0"
+                                    placeholder="e.g., 80" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold text-uppercase small text-muted">PH</label>
+                                <input type="number" step="any" name="ph" class="form-control bg-light border-0"
+                                    placeholder="e.g., 6.5" required>
+                            </div>
+
+                            <!-- Rainfall Row -->
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold text-uppercase small text-muted">Rainfall</label>
+                                <input type="number" step="any" name="rainfall" class="form-control bg-light border-0"
+                                    placeholder="e.g., 90" required>
+                            </div>
+                        </div>
+                        {% if prediction %}
+                        <div class="mt-4">
+                            <h5 class="fw-bold mb-3"><i class="fa-regular fa-lightbulb me-2"></i>Result</h5>
+                            <p class="lead">{{ prediction }}</p>
+                        </div>
+                        {% endif %}
+
+                        <div class="mt-4 d-flex gap-2">
+                            <button type="submit" class="btn btn-success px-4 fw-semibold"
+                                style="background-color: var(--primary-green); border: none;">
+                                <i class="fa-solid fa-wand-magic-sparkles me-2"></i>Predict
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary px-4 fw-semibold"
+                                onclick="fillSample()">
+                                <i class="fa-solid fa-bolt me-2"></i>Use Sample
+                            </button>
+                            <button type="reset" class="btn btn-outline-danger px-4 fw-semibold">
+                                <i class="fa-solid fa-rotate-right me-2"></i>Reset
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Tips & Info -->
+        <div class="col-lg-4">
+            <!-- Tips Card -->
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3"><i class="fa-regular fa-lightbulb me-2"></i>Tips</h5>
+                    <ul class="small text-muted ps-3 mb-0">
+                        <li class="mb-2">Use realistic local values for temperature, humidity & rainfall.</li>
+                        <li class="mb-2">Soil pH valid range 0–14 (most crops prefer ~6–7).</li>
+                        <li>Save multiple predictions and compare in your History.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Info Card -->
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-circle-question me-2"></i>What is N-P-K?</h5>
+                    <p class="small text-muted mb-0">
+                        N (Nitrogen), P (Phosphorus), K (Potassium) — key soil nutrients affecting crop growth.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function fillSample() {
+        const rand = (min, max, decimals = 0) =>
+            (Math.random() * (max - min) + min).toFixed(decimals);
+
+        document.querySelector('input[name="nitrogen"]').value = rand(0, 140);
+        document.querySelector('input[name="phosphorus"]').value = rand(5, 60);
+        document.querySelector('input[name="potassium"]').value = rand(5, 250);
+
+        document.querySelector('input[name="temperature"]').value = rand(10, 40, 1);
+        document.querySelector('input[name="humidity"]').value = rand(20, 100, 0);
+
+        document.querySelector('input[name="ph"]').value = rand(4.5, 8.5, 2);
+        document.querySelector('input[name="rainfall"]').value = rand(20, 300, 1);
+    }
+</script>
+
+{% if prediction %}
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Recommended Crop: {{ prediction }}',
+        showConfirmButton: false,
+        timer: 3000
+    });
+</script>
+{% endif %}
+
+
+{% endblock %}

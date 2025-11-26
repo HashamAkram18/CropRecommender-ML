@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %} Home | Crop Recommender {% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="hero-card p-5 text-white rounded-4 shadow-lg"
+        style="background: linear-gradient(135deg, #2E7D32 0%, #43A047 100%); position: relative; overflow: hidden; min-height: 600px;">
+        <div class="row align-items-center h-100">
+            <div class="col-lg-7 z-1 py-4">
+                <h1 class="display-3 fw-bold mb-3">Smart Crop Recommendation</h1>
+                <p class="lead mb-4 text-white-50" style="max-width: 600px;">Enter soil & weather parameters to get
+                    instant, ML-powered crop suggestions. Clean UI, secure accounts, and detailed history — all in one
+                    place.</p>
+
+                {# Authentication buttons: staff, authenticated user, or anonymous #}
+                {% if user is defined and user is not none and user.is_authenticated %}
+                {% if user.is_staff %}
+                <div class="d-flex flex-wrap gap-3 mb-5">
+                    <a href="{% url 'admin:index' %}" class="btn btn-light btn-lg fw-semibold px-4 shadow-sm">
+                        <i class="fa-solid fa-gauge me-2"></i>Admin Dashboard
+                    </a>
+                    <a href="{% url 'predictions:view_all' %}" class="btn btn-outline-light btn-lg fw-semibold px-4">
+                        <i class="fa-solid fa-eye me-2"></i>View Predictions
+                    </a>
+                </div>
+                {% else %}
+                <div class="d-flex flex-wrap gap-3 mb-5">
+                    <a href="{% url 'predictions:create' %}" class="btn btn-light btn-lg fw-semibold px-4 shadow-sm">
+                        <i class="fa-solid fa-play me-2"></i>Predict Now
+                    </a>
+                    <a href="{% url 'predictions:history' %}" class="btn btn-outline-light btn-lg fw-semibold px-4">
+                        <i class="fa-solid fa-clock-rotate-left me-2"></i>My History
+                    </a>
+                </div>
+                {% endif %}
+                {% else %}
+                <div class="d-flex flex-wrap gap-3 mb-5">
+                    <a href="{% url 'auth:login' %}" class="btn btn-light btn-lg fw-semibold px-4 shadow-sm">
+                        <i class="fa-solid fa-right-to-bracket me-2"></i>User Login
+                    </a>
+                    <a href="{% url 'auth:register' %}" class="btn btn-outline-light btn-lg fw-semibold px-4">
+                        <i class="fa-solid fa-user-plus me-2"></i>Create Account
+                    </a>
+                    <a href="{{ url_for('admin.login') }}" class="btn btn-outline-light btn-lg fw-semibold px-4">
+                        <i class="fa-solid fa-lock me-2"></i>Admin Login
+                    </a>
+                </div>
+                {% endif %}
+
+                <div class="d-flex gap-4 mt-auto">
+                    <div class="stat-card bg-white bg-opacity-10 p-3 rounded-3"
+                        style="min-width: 150px; backdrop-filter: blur(5px);">
+                        <small class="d-block text-white-50 text-uppercase fw-bold"
+                            style="font-size: 0.8rem;">Users</small>
+                        <span class="h3 fw-bold mb-0">2</span>
+                    </div>
+                    <div class="stat-card bg-white bg-opacity-10 p-3 rounded-3"
+                        style="min-width: 150px; backdrop-filter: blur(5px);">
+                        <small class="d-block text-white-50 text-uppercase fw-bold"
+                            style="font-size: 0.8rem;">Predictions</small>
+                        <span class="h3 fw-bold mb-0">5</span>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-white-50">
+                    <small><i class="fa-solid fa-shield-halved me-2"></i>Your predictions are saved privately in your
+                        account.</small>
+                </div>
+            </div>
+
+            <div class="col-lg-5 z-1 text-end d-none d-lg-block">
+                <div class="card border-0 rounded-4 overflow-hidden shadow-lg mx-auto"
+                    style="transform: rotate(2deg); max-width: 400px;">
+                    <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=1770&auto=format&fit=crop"
+                        class="card-img" alt="Farmer using tablet in corn field"
+                        style="height: 400px; object-fit: cover;">
+                    <div class="card-img-overlay d-flex align-items-start p-4"
+                        style="background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);">
+                        <h3 class="text-white fw-bold text-uppercase text-start lh-sm"
+                            style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5); font-size: 2rem;">
+                            Crop<br>Recommendation<br>System</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Decorative Circle -->
+        <div class="position-absolute bg-white opacity-10 rounded-circle"
+            style="width: 500px; height: 500px; top: -150px; right: -150px; filter: blur(60px); opacity: 0.1;"></div>
+    </div>
+</div>
+{% endblock %}

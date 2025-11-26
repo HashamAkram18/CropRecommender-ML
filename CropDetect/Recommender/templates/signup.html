@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+
+{% block title %} Create Account - Crop Recommender {% endblock %}
+
+{% block content %}
+<style>
+    .signup-container {
+        min-height: calc(100vh - 76px);
+        /* Adjust based on navbar height */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background-color: #f8f9fa;
+    }
+
+    .signup-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        width: 100%;
+        max-width: 1000px;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .signup-image {
+        flex: 1;
+        background-image: url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=1000&auto=format&fit=crop');
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 3rem;
+        color: white;
+        min-height: 600px;
+    }
+
+    .signup-image::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.7) 100%);
+    }
+
+    .signup-image-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .signup-form {
+        flex: 1;
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .form-control {
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        background-color: #fff;
+    }
+
+    .form-control:focus {
+        box-shadow: none;
+        border-color: var(--primary-green);
+    }
+
+    .input-group-text {
+        background-color: #fff;
+        border-right: none;
+        border-radius: 8px 0 0 8px;
+        border: 1px solid #e0e0e0;
+        color: #666;
+    }
+
+    .input-group .form-control {
+        border-left: none;
+    }
+
+    .btn-signup {
+        background-color: var(--primary-green);
+        color: white;
+        padding: 0.8rem;
+        border-radius: 8px;
+        font-weight: 600;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-signup:hover {
+        background-color: var(--dark-green);
+        color: white;
+        transform: translateY(-1px);
+    }
+
+    .feature-list {
+        list-style: none;
+        padding: 0;
+        margin-top: 1rem;
+    }
+
+    .feature-list li {
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        font-size: 0.9rem;
+    }
+
+    .feature-list li i {
+        margin-right: 0.5rem;
+        background-color: white;
+        color: var(--primary-green);
+        border-radius: 50%;
+        padding: 2px;
+        font-size: 0.8rem;
+    }
+
+    @media (max-width: 768px) {
+        .signup-card {
+            flex-direction: column;
+        }
+
+        .signup-image {
+            min-height: 200px;
+            padding: 2rem;
+        }
+
+        .signup-form {
+            padding: 2rem;
+        }
+    }
+</style>
+
+<div class="signup-container">
+    <div class="signup-card">
+        <!-- Left Side - Image -->
+        <div class="signup-image">
+            <div class="signup-image-content">
+                <h2 class="fw-bold mb-2"><i class="fa-solid fa-leaf me-2"></i>Create your account</h2>
+                <p class="mb-4 opacity-75">Predict crops, save history, export CSV — all in one dashboard.</p>
+
+                <ul class="feature-list">
+                    <li><i class="fa-solid fa-check"></i> Secure & private</li>
+                    <li><i class="fa-solid fa-check"></i> Fast ML predictions</li>
+                    <li><i class="fa-solid fa-check"></i> Modern responsive UI</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Right Side - Form -->
+        <div class="signup-form">
+            <h3 class="fw-bold mb-4"><i class="fa-solid fa-user-plus me-2"></i>Create Account</h3>
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label text-muted small">Full Name</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa-regular fa-user"></i></span>
+                        <input type="text" name="username" class="form-control" placeholder="e.g., Test User" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-muted small">Phone (optional)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa-solid fa-phone"></i></span>
+                        <input type="tel" name="phone" class="form-control" placeholder="e.g., 1122******">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-muted small">Email (username)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa-regular fa-envelope"></i></span>
+                        <input type="email" name="email" class="form-control" placeholder="you@example.com" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-muted small">Password (min 6 chars)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa-solid fa-key"></i></span>
+                        <input type="password" name="password1" class="form-control" placeholder="........." required>
+                        <button class="btn btn-outline-secondary border-start-0 border-end-1 rounded-end" type="button"
+                            style="border-color: #e0e0e0;">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label text-muted small">Confirm Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa-solid fa-shield-halved"></i></span>
+                        <input type="password" name="password2" class="form-control" placeholder="........." required>
+                        <button class="btn btn-outline-secondary border-start-0 border-end-1 rounded-end" type="button"
+                            style="border-color: #e0e0e0;">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mb-4 form-check">
+                    <input type="checkbox" class="form-check-input" id="terms" required>
+                    <label class="form-check-label small text-muted" for="terms">
+                        I agree to the <a href="#" class="text-decoration-none"
+                            style="color: var(--primary-green);">Terms & Privacy</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-signup w-100 mb-3">Create Account</button>
+
+                <div class="text-center small text-muted">
+                    Already have an account? <a href="{% url 'login' %}" class="text-decoration-none fw-bold"
+                        style="color: var(--primary-green);"><i class="fa-solid fa-right-to-bracket me-1"></i>Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
