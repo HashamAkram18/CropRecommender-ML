@@ -20,29 +20,26 @@
                     <a href="{% url 'admin:index' %}" class="btn btn-light btn-lg fw-semibold px-4 shadow-sm">
                         <i class="fa-solid fa-gauge me-2"></i>Admin Dashboard
                     </a>
-                    <a href="{% url 'predictions:view_all' %}" class="btn btn-outline-light btn-lg fw-semibold px-4">
-                        <i class="fa-solid fa-eye me-2"></i>View Predictions
-                    </a>
                 </div>
                 {% else %}
                 <div class="d-flex flex-wrap gap-3 mb-5">
-                    <a href="{% url 'predictions:create' %}" class="btn btn-light btn-lg fw-semibold px-4 shadow-sm">
+                    <a href="{% url 'predict' %}" class="btn btn-light btn-lg fw-semibold px-4 shadow-sm">
                         <i class="fa-solid fa-play me-2"></i>Predict Now
                     </a>
-                    <a href="{% url 'predictions:history' %}" class="btn btn-outline-light btn-lg fw-semibold px-4">
+                    <a href="{% url 'history' %}" class="btn btn-outline-light btn-lg fw-semibold px-4">
                         <i class="fa-solid fa-clock-rotate-left me-2"></i>My History
                     </a>
                 </div>
                 {% endif %}
                 {% else %}
                 <div class="d-flex flex-wrap gap-3 mb-5">
-                    <a href="{% url 'auth:login' %}" class="btn btn-light btn-lg fw-semibold px-4 shadow-sm">
+                    <a href="{% url 'login' %}" class="btn btn-light btn-lg fw-semibold px-4 shadow-sm">
                         <i class="fa-solid fa-right-to-bracket me-2"></i>User Login
                     </a>
-                    <a href="{% url 'auth:register' %}" class="btn btn-outline-light btn-lg fw-semibold px-4">
+                    <a href="{% url 'signup' %}" class="btn btn-outline-light btn-lg fw-semibold px-4">
                         <i class="fa-solid fa-user-plus me-2"></i>Create Account
                     </a>
-                    <a href="{{ url_for('admin.login') }}" class="btn btn-outline-light btn-lg fw-semibold px-4">
+                    <a href="{% url 'admin:login' %}" class="btn btn-outline-light btn-lg fw-semibold px-4">
                         <i class="fa-solid fa-lock me-2"></i>Admin Login
                     </a>
                 </div>

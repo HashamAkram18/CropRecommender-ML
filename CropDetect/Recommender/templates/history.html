@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Prediction History - Crop Recommender{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold mb-0"><i class="fa-solid fa-clock-rotate-left me-2"></i>My Prediction History</h2>
+    </div>
+
+    {% if predictions %}
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">N</th>
+                            <th scope="col">P</th>
+                            <th scope="col">K</th>
+                            <th scope="col">Temp</th>
+                            <th scope="col">Humidity</th>
+                            <th scope="col">pH</th>
+                            <th scope="col">Rainfall</th>
+                            <th scope="col">Crop</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in predictions %}
+                        <tr>
+                            <td>{{ p.created_at|date:"d M Y h:i A" }}</td>
+                            <td>{{ p.nitrogen }}</td>
+                            <td>{{ p.phosphorus }}</td>
+                            <td>{{ p.potassium }}</td>
+                            <td>{{ p.temperature }}</td>
+                            <td>{{ p.humidity }}</td>
+                            <td>{{ p.ph }}</td>
+                            <td>{{ p.rainfall }}</td>
+                            <td class="fw-semibold">{{ p.predicted_label|title }}</td>
+                            <td>
+                                <a href="{% url 'delete_prediction' p.id %}" class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Are you sure you want to delete this prediction?')">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="fa-solid fa-circle-info me-2"></i>You don't have any saved predictions yet. Make a
+        <a href="{% url 'predict' %}">new prediction</a> to see it here.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

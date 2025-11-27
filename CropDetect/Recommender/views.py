@@ -4,43 +4,66 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
+from django.shortcuts import get_object_or_404
+
 from .forms import UserSignupForm
 from .migrations.ML.model_loader import predict_crop
 
 # Create your views here.
 
+
 def home(request):
     return render(request, "home.html") 
 
-def signup_view(request):
-    if request.user.is_authenticated:
-        return redirect("home")
 
+@login_required
+def history_view(request):
+    predictions = Prediction.objects.filter(user=request.user).order_by("-created_at")
+    return render(request, "history.html", {"predictions": predictions})
+
+@login_required
+def delete_prediction(request, prediction_id):
+    prediction = get_object_or_404(Prediction, id=prediction_id, user=request.user  )
+    prediction.delete()
+    messages.success(request, "Prediction deleted successfully")
+    return redirect("history")
+    
+def signup_view(request):
+    # Allow accessing signup even if already authenticated, for debugging or changing accounts.
     if request.method == "POST":
         form = UserSignupForm(request.POST)
         if form.is_valid():
-            
             user = form.save()
             login(request, user)
             messages.success(request, "Account created successfully")
             return redirect("home")
-    logout(request)
-    messages.success(request, "Logged out successfully")
-    return redirect("home")
+    else:
+        form = UserSignupForm()
+
+    return render(request, "signup.html", {"form": form})
 
 def login_view(request):
-    if request.user.is_authenticated:
-        return redirect("home")
+    # Allow accessing login even if already authenticated, for debugging or switching users.
     if request.method == "POST":
-        username = request.POST.get("username")
+        email = request.POST.get("email")
         password = request.POST.get("password")
-        user = authenticate(request, username=username, password=password)
+
+        username = None
+        if email:
+            try:
+                # Look up the user by email, then authenticate with their username
+                user_obj = User.objects.get(email=email)
+                username = user_obj.username
+            except User.DoesNotExist:
+                username = None
+
+        user = authenticate(request, username=username, password=password) if username else None
         if user is not None:
             login(request, user)
             messages.success(request, "Logged in successfully")
             return redirect("home")
         else:
-            messages.error(request, "Invalid username or password")
+            messages.error(request, "Invalid email or password")
     return render(request, "login.html")
 
 def logout_view(request):
